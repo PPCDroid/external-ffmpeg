@@ -103,10 +103,12 @@ LOCAL_SRC_FILES += $(SOURCE_ENCODERS)
 LOCAL_SRC_FILES += $(SOURCE_FFT)			
 LOCAL_SRC_FILES += $(SOURCE_GOLOMB)		
 LOCAL_SRC_FILES += $(SOURCE_MDCT)			
-LOCAL_SRC_FILES += $(SOURCE_RDFT)			
+LOCAL_SRC_FILES += $(SOURCE_RDFT)
+ifeq ($(TARGET_ARCH),arm)			
 LOCAL_SRC_FILES += $(SOURCE_HAVE_ARM)		
 LOCAL_SRC_FILES += $(SOURCE_HAVE_ARMV5TE)		
 #LOCAL_SRC_FILES += $(SOURCE_HAVE_ARMVFP)
+endif
 
 
 LOCAL_MODULE := libavcodec
@@ -118,8 +120,15 @@ LOCAL_C_INCLUDES := 				\
 	$(FFMPEG_TOP)/				\
 	$(FFMPEG_TOP)/libavutil/		\
 	$(LOCAL_PATH)           		\
-	$(LOCAL_PATH)/arm/
+	$(FFMPEG_TOP)/android/arch/$(TARGET_ARCH) \
+	$(LOCAL_PATH)/$(TARGET_ARCH)/			
 
+ifeq ($(TARGET_ARCH),arm)
 LOCAL_CFLAGS += -O4 -mno-thumb-interwork -mno-thumb -marm -DHAVE_AV_CONFIG_H
+endif
+
+ifeq ($(TARGET_ARCH),mips)
+LOCAL_CFLAGS += -O4 -DHAVE_AV_CONFIG_H
+endif
 
 include $(BUILD_STATIC_LIBRARY)

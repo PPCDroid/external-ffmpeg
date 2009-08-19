@@ -33,8 +33,15 @@ LOCAL_PRELINK_MODULE := false
 LOCAL_C_INCLUDES := 				\
 	$(FFMPEG_TOP)/				\
 	$(LOCAL_PATH)           		\
-	$(LOCAL_PATH)/arm/
+	$(LOCAL_PATH)/$(TARGET_ARCH)/			\
+	$(FFMPEG_TOP)/android/arch/$(TARGET_ARCH)	
 
+ifeq ($(TARGET_ARCH),arm)
 LOCAL_CFLAGS += -O4 -mno-thumb-interwork -mno-thumb -marm -DHAVE_AV_CONFIG_H
+endif
+
+ifeq ($(TARGET_ARCH),mips)
+LOCAL_CFLAGS += -O4  -DHAVE_AV_CONFIG_H
+endif
 
 include $(BUILD_STATIC_LIBRARY)
